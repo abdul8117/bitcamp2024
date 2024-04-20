@@ -8,11 +8,23 @@ app = Flask(__name__)
 # Path for main Svelte page
 @app.route('/')
 def hello_world():
-    f = open('uscounties.csv', encoding='UTF8')
-    csv_reader = csv.reader(f)
-    for line in csv_reader:
-        print(line)
-    f.close()
+    states = open('50States.csv')
+    states = open('50States.csv', encoding='UTF8')
+    states_reader = csv.reader(states)
+    states_dict={}
+    for line in states_reader:
+        states_dict.update({line[0]:[]})
+    states.close()
+
+    counties = open('uscounties.csv')
+    counties = open('uscounties.csv', encoding='UTF8')
+    counties_reader = csv.reader(counties)
+    for line in counties_reader:
+        states_dict.get(line[1]).append(line[0])
+    counties.close()
+
+    {states_dict[i].sort(): states_dict[i] for i in list(states_dict.keys())}
+    
     return send_from_directory('svelte/public', 'index.html')
 
 
@@ -27,7 +39,6 @@ def svelte_client(path):
 @app.route("/rand")
 def hello():
     return str(random.randint(0, 100))
-
 
 if __name__ == '__main__':
     app.run()
