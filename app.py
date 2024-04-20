@@ -1,6 +1,13 @@
 import random
 
-from flask import Flask
+
+from flask import Flask, send_from_directory
+
+# Serve Svelte apps
+@app.routes("/<path:path>")
+def svelte_client(path):
+    return send_from_directory('../svelte/public/', path)
+
 
 app = Flask(__name__)
 
