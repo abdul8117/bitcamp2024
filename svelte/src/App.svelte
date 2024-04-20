@@ -16,8 +16,68 @@
     // Add other bootstrap parameters as needed, using camel case.
   });
 
+	let county = '';
+	let state = '';
+	let start_year_date = '';
+	let end_year_date = '';
+	let k=name.toUpperCase();
 
-  </script>
+	function giveData(){
+		if (start_year_date==null||end_year_date==null){
+			
+		}
+	}	
   
-  <h1>Your number is {rand}!</h1>
-  <button on:click={getRand}>Get a random number</button>
+  </script>
+    
+  
+
+    <div id="parent" style="background-color: none; display:flex; justify-content: center; height:6%; border:none">
+      <input bind:value={state} placeholder="state" />
+    <input bind:value={county} placeholder="county" />
+    <input bind:value={start_year_date} placeholder="start-year/date" />
+    <input bind:value={end_year_date} placeholder="end-year/date" />
+    
+      <div id = "search button" style="background-color:none; display:flex; justify-content: reverse-end; height:80%" >
+                             
+        <button disabled={!(state && start_year_date && end_year_date)} on:click = {giveData}>
+          Search
+        </button>
+            <style>
+                button{
+                background-color: #f69697;
+                border: none;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                  
+                }
+              
+            </style>
+        
+      </div>
+    
+    
+    
+    </div>
+    
+    <div id="mapArea" style="display:flex; height:100%; border:none">
+      
+      
+    <p>THIS IS MAP!</p>
+    
+    </div>
+    
+    
+
+
+
+
+
+
+
+
+
