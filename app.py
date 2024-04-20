@@ -8,9 +8,7 @@ app = Flask(__name__)
 # Path for main Svelte page
 @app.route('/')
 def hello_world():
-    # To access files in root directory, move to parent directory
-    # Loading things from svelte changes the context to inside svelte folder
-    f = open('../uscounties.csv', encoding='UTF8')
+    f = open('uscounties.csv', encoding='UTF8')
     csv_reader = csv.reader(f)
     for line in csv_reader:
         print(line)
