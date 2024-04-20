@@ -160,7 +160,7 @@ cython_debug/
 .idea/
 
 # Svelte
-node_modules/
-.svelte-kit/
+svelte/node_modules/
+svelte/.svelte-kit/
 
 .DS_Store/
