@@ -1,8 +1,17 @@
-import csv
-import random
 from flask import Flask, send_from_directory
 
+from scripts.fema_data import get_disaster_data, filter_disaster_data
+
+import csv
+import random
+
 app = Flask(__name__)
+
+
+# Path for static files (compiled JS/CSS, etc.)
+@app.route("/<path:path>")
+def svelte_client(path):
+    return send_from_directory('svelte/public', path)
 
 
 # Path for main Svelte page
@@ -28,10 +37,11 @@ def hello_world():
     return send_from_directory('svelte/public', 'index.html')
 
 
-# Path for static files (compiled JS/CSS, etc.)
-@app.route("/<path:path>")
-def svelte_client(path):
-    return send_from_directory('svelte/public', path)
+@app.route('/search/<state>/<county>/<start_year>/<start_month>/<end_year>/<end_month>', methods=["GET"])
+def get_disaster_info(state, county, start_year, start_month, end_year, end_month):
+    data = get_disaster_data(state, county, start_year, start_month, end_year, end_month)
+
+    return filter_disaster_data(data) # returns a JSON object
 
 
 # Function for testing Svelte requests to flask backend
