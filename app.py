@@ -1,6 +1,10 @@
-import csv
 import random
+import os
 from flask import Flask, send_from_directory
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -23,6 +27,12 @@ def svelte_client(path):
 @app.route("/rand")
 def hello():
     return str(random.randint(0, 100))
+
+
+# Function that retrieves API key for client
+@app.route("/key")
+def get_key():
+    return os.getenv('API_KEY')
 
 
 if __name__ == '__main__':
