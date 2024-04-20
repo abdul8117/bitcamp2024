@@ -6,13 +6,9 @@ app = Flask(__name__)
 
 
 # Path for main Svelte page
+# /return/
 @app.route('/')
 def hello_world():
-    f = open('uscounties.csv', encoding='UTF8')
-    csv_reader = csv.reader(f)
-    for line in csv_reader:
-        print(line)
-    f.close()
     return send_from_directory('svelte/public', 'index.html')
 
 
