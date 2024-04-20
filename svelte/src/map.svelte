@@ -1,6 +1,6 @@
 <script>
 	let container;
-	let map;
+	export let map;
 	let zoom = 8;
     let center = {lat: -34.397, lng: 150.644};
 
