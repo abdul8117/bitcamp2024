@@ -162,3 +162,5 @@ cython_debug/
 # Svelte
 node_modules/
 .svelte-kit/
+
+.DS_Store/
