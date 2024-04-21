@@ -1,10 +1,6 @@
 <script>
-<<<<<<< Updated upstream
-	import Map, map from './Map.svelte'
-=======
   import Map from './Map.svelte'
   import PopUp from './PopUp.svelte';
->>>>>>> Stashed changes
 	export let ready
 
 	// Code for fetching the key from Flask backend
@@ -20,7 +16,6 @@
 	// getKey();
 	// console.log(key)
 	let state = '';
-<<<<<<< Updated upstream
 	let county = '';
 	// month format "XX", ex. Jan -> 01, Feb -> 02, etc.
 	let startMonth = '';
@@ -52,29 +47,8 @@
 					},
 				],
 			};
-			const response = await regionLookupClient.searchRegion({ headers, data });
-			// Place marker
-			const marker = new google.maps.marker.AdvancedMarkerElement({
-				map,
-
-			})
 		}
-		// center map on state
-		
-		// Montgomery County, MD --> 24031
-		// look up place ID based on 
-
 	}
-=======
-	let start_year_date = '';
-	let end_year_date = '';
-
-	// function sendRequest(){
-	// 	// retrive strings
-	// 	// send strings to flask backend
-	// 	// receive json data from backend
-	// 	// load as google maps pins
-	// }
 
 
   //importing pop up from the svelete 
@@ -86,7 +60,6 @@
 
 	}
 
->>>>>>> Stashed changes
 </script>
 
 <svelte:head>
@@ -100,7 +73,6 @@
 	}
 	</style>
 
-<<<<<<< Updated upstream
 <div id="parent" style="background-color: none; display:flex; justify-content: center; height:6%; border:none">
 	<input bind:value={state} placeholder="Enter state (e.g. MD)" />
 	<input bind:value={county} placeholder="Enter county (e.g. Montgomery" />
@@ -110,26 +82,13 @@
 	<input bind:value={endYear} placeholder="Enter end year (XXXX)" />
 	<div id = "search button" style="background-color:none; display:flex; justify-content: reverse-end; height:80%" >              
 		<button disabled={!(state && (startMonth && startYear) && (endMonth && endYear))} onclick={}>Search</button>
-=======
-<div class="parent" style="background-color: none; display:flex; justify-content: center; height:6%; border:none">
-	<input bind:value={state} placeholder="state" />
-	<input bind:value={county} placeholder="county" />
-	<input bind:value={start_year_date} placeholder="start-year/date" />
-	<input bind:value={end_year_date} placeholder="end-year/date" />
-  
   
   <button on:click = {togglePopUp}> 
     Open PopUp</button>
   <!-- svelte-ignore missing-declaration -->
-  {#if popUpVisible}
-  <PopUp isVisible={popUpVisible} />
-  {/if}
-
-  
   
 	<div id = "search button" style="background-color:none; display:flex; justify-content: reverse-end; height:80%" >              
     <button disabled={!(state && start_year_date && end_year_date)}>Search</button>
->>>>>>> Stashed changes
 		<style>
       button{
         background-color: #f69697;
@@ -144,7 +103,9 @@
       </style>
 	</div>
 </div>
-
+{#if popUpVisible}
+<PopUp isVisible={popUpVisible} />
+{/if}
 
 
 { #if ready }
