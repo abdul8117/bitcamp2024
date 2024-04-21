@@ -47,6 +47,12 @@
 				position: { lat: latitude, lng: longitude },
 				title: name,
 			});
+
+			google.maps.event.addListener(marker, 'click', (function(marker))){
+				return function(){
+					
+				}
+			}
 			marker.setMap(map);
 		}
 	}
