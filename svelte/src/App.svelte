@@ -1,6 +1,5 @@
 <script>
-	// import Map from './Map.svelte'
-	// export let ready
+  import PopUp from './PopUp.svelte';
 
 	// Code for fetching the key from Flask backend
 	// let key = '';
@@ -24,7 +23,9 @@
 	let endMonth = '';
 	let endYear = '';
 	let k=name.toUpperCase();
-	
+	//importing pop up from the svelete 
+	let popUpVisible =false;
+
 	async function getDisasterData() {
 		const response = await fetch(`./search/${state}/${county} (County)/${startYear}/${startMonth}/${endYear}/${endMonth}`);
 		const disasters = await response.json();
@@ -47,12 +48,10 @@
 				position: { lat: latitude, lng: longitude },
 				title: name,
 			});
-
-			google.maps.event.addListener(marker, 'click', (function(marker))){
-				return function(){
-					
-				}
-			}
+			google.maps.event.addListener(marker, 'click', () => {
+				// fetch housing cost
+				popUpVisible = !popUpVisible
+			});					
 			marker.setMap(map);
 		}
 	}
@@ -69,12 +68,12 @@
 	<input bind:value={startMonth} placeholder="Enter start month (XX)" />
 	<input bind:value={startYear} placeholder="Enter start year (XXXX)" />
 	<input bind:value={endMonth} placeholder="Enter end month (XX)" />
-	<input bind:value={endYear} placeholder="Enter end year (XXXX)" />
+	<input bind:value={endYear} placeholder="Enter end year (XXXX)" />		  
 	<div id = "search button" style="background-color:none; display:flex; justify-content: reverse-end; height:80%" >              
 		<button disabled={!(state && (startMonth && startYear) && (endMonth && endYear))} on:click={getDisasterData}>Search</button>
 		<style>
-			button{
-				background-color: #f69697;
+      		button{
+        		background-color: #f69697;
 				border: none;
 				text-align: center;
 				text-decoration: none;
@@ -83,9 +82,13 @@
 				margin: 4px 2px;
 				cursor: pointer;
 			}
-		</style>
+      	</style>
 	</div>
 </div>
+{#if popUpVisible}
+<PopUp isVisible={popUpVisible} />
+{/if}
+
 
 <style>
 	.full-screen {
