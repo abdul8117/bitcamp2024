@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 	let container;
 	export let map;
 	let zoom = 8;
@@ -21,4 +21,4 @@
 	}
 </style>
 
-<div class="full-screen" bind:this={container}></div>
+<div class="full-screen" bind:this={container}></div> -->

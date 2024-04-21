@@ -8,7 +8,6 @@ def create_table():
 
     # delete data table and month_years table if they exist
     c.execute("DROP TABLE IF EXISTS data;")
-    c.execute("DROP TABLE IF EXISTS month_years;")
 
     # Create a table to store the Zillow data with county name and state
     c.execute("CREATE TABLE data (RegionID INT, county_name VARCHAR(255), state VARCHAR(2), PRIMARY KEY (RegionID));")

@@ -1,6 +1,6 @@
 <script>
-	import Map, map from './Map.svelte'
-	export let ready
+	// import Map from './Map.svelte'
+	// export let ready
 
 	// Code for fetching the key from Flask backend
 	// let key = '';
@@ -15,6 +15,7 @@
 	// getKey();
 	// console.log(key)
 	let state = '';
+	// county ex. Montgomery
 	let county = '';
 	// month format "XX", ex. Jan -> 01, Feb -> 02, etc.
 	let startMonth = '';
@@ -23,41 +24,31 @@
 	let endMonth = '';
 	let endYear = '';
 	let k=name.toUpperCase();
+	
+	async function getDisasterData() {
+		const response = await fetch(`./search/${state}/${county} (County)/${startYear}/${startMonth}/${endYear}/${endMonth}`);
+		const disasters = await response.json();
 
-	function getDisasterData(state, county, startMonth, startYear, endMonth, endYear) {
-		const json = '';
-		fetch(`./search/${state}/${county}/${startYear}/${startMonth}/${endYear}/${endMonth}`)
-			.then(d => (json = d));
-		const disastersData = JSON.parse(json);
-		for (const obj in disastersData) {
-			// State fips, county fips
-			let stateFIPS = obj.state_fips_code;
-			let countyFIPS = obj.county_fips_code;
-			// Get place ID w/ fips code
-			const headers = {
-				'X-Goog-Api-Key': 'AIzaSyAGSkMd2TxcUsrY3ZTcEESTXKk15uwbklg',
-			};
-			const lookupRegionRequest = {
-				search_values: [
-					{
-						'unit_code': stateFIPS + countyFIPS,
-						'place_type': 'ADMINISTRATIVE_AREA_LEVEL_2',
-						'region_code': 'US',
-					},
-				],
-			};
-			const response = await regionLookupClient.searchRegion({ headers, data });
-			// Place marker
-			const marker = new google.maps.marker.AdvancedMarkerElement({
-				map,
+		let countyFIPS = `${disasters[0].state_fips_code}${disasters[0].county_fips_code}`
+		let response1 = await fetch(`./latlng/${countyFIPS}`);
+		let coords = await response1.text();
+		coords = coords.split(' ');
 
-			})
+		let latitude = parseFloat(coords[1]);
+		let longitude = parseFloat(coords[0]);
+		let map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 4,
+			center: { lat: latitude, lng: longitude },
+		});
+
+		for (let i = 0; i < disasters.length; i++) {
+			let name = disasters[i].disaster_name;
+			const marker = new google.maps.Marker({
+				position: { lat: latitude, lng: longitude },
+				title: name,
+			});
+			marker.setMap(map);
 		}
-		// center map on state
-		
-		// Montgomery County, MD --> 24031
-		// look up place ID based on 
-
 	}
 </script>
 
@@ -65,12 +56,6 @@
 	<!-- TODO: fix loading key from backend -->
 	<script defer async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGSkMd2TxcUsrY3ZTcEESTXKk15uwbklg&callback=initMap"></script>
 </svelte:head>
-
-<style>
-	:global(body) {
-		padding: 0;
-	}
-	</style>
 
 <div id="parent" style="background-color: none; display:flex; justify-content: center; height:6%; border:none">
 	<input bind:value={state} placeholder="Enter state (e.g. MD)" />
@@ -80,7 +65,7 @@
 	<input bind:value={endMonth} placeholder="Enter end month (XX)" />
 	<input bind:value={endYear} placeholder="Enter end year (XXXX)" />
 	<div id = "search button" style="background-color:none; display:flex; justify-content: reverse-end; height:80%" >              
-		<button disabled={!(state && (startMonth && startYear) && (endMonth && endYear))} onclick={}>Search</button>
+		<button disabled={!(state && (startMonth && startYear) && (endMonth && endYear))} on:click={getDisasterData}>Search</button>
 		<style>
 			button{
 				background-color: #f69697;
@@ -95,6 +80,12 @@
 		</style>
 	</div>
 </div>
-{ #if ready }
-<Map></Map>
-{ /if }
+
+<style>
+	.full-screen {
+		width: 100vw;
+		height: 100vh;
+	}
+</style>
+
+<div class='full-screen' id='map'></div>
