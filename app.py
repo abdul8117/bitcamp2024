@@ -54,7 +54,7 @@ def get_housing_data(state, county, disaster_year, disaster_month):
         json_list.append(
             {'month':(i%12+1),
              'year':start_year,
-             'housing cost':results[0][running]
+             'housing_cost':results[0][running]
              })
         if((i%12+1)==12):
             start_year+=1
