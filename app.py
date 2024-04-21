@@ -1,14 +1,23 @@
 import sqlite3
 import json
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, session
+from flask_session import Session
 from scripts.fema_data import get_disaster_data, filter_disaster_data
 import random
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from scripts.county_latlng_data import lat_lng
 
 
+load_dotenv()
+
 app = Flask(__name__)
+
+# Session config
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_COOKIE_PATH"] = "/"
+Session(app)
 
 # Path for static files (compiled JS/CSS, etc.)
 @app.route("/<path:path>")
@@ -23,6 +32,11 @@ def hello_world():
 
 @app.route('/search/<state>/<county>/<disaster_year>/<disaster_month>', methods=["GET"])
 def get_housing_data(state, county, disaster_year, disaster_month):
+    # session["disaster_info"]["state"] = state
+    # session["disaster_info"]["county"] = county
+    # session["disaster_info"]["disaster_year"] = disaster_year
+    # session["disaster_info"]["disaster_month"] = disaster_month
+
     connection = sqlite3.connect("api-testing-20240420T161852Z-001/db/house_prices_monthly.db")
     cursor = connection.cursor()
 
@@ -54,7 +68,7 @@ def get_housing_data(state, county, disaster_year, disaster_month):
         json_list.append(
             {'month':(i%12+1),
              'year':start_year,
-             'housing cost':results[0][running]
+             'housing_cost':results[0][running]
              })
         if((i%12+1)==12):
             start_year+=1

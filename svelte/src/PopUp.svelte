@@ -6,6 +6,7 @@
     // Define thresholds for color coding
     let impactThreshold = 1;
     
+    
 
     import { setContext } from 'svelte';
     import { createEventDispatcher } from 'svelte';
@@ -16,9 +17,14 @@
     // Export context for child components to access the dispatch function
     setContext('dispatch', dispatch);
 
-    
+    let state = sessionStorage.getItem("state");
+    let county = sessionStorage.getItem("county");
+    let year = sessionStorage.getItem("disaster_year");
+    let month = sessionStorage.getItem("disaster_month");
 
-    // Sample data
+    let isDone = false;
+    let housingCosts;
+
     let tableData = [
         { month: 'T - 12', homeValue: 100000, percentChange: 0},
         { month: 'T - 11', homeValue: 102000, percentChange: 2 },
@@ -44,10 +50,30 @@
         { month: 'T + 9', homeValue: 134580.20, percentChange: 7 },
         { month: 'T + 10', homeValue: 134580.20, percentChange: 2 },
         { month: 'T + 11', homeValue: 134580.20, percentChange: 2 },
-        { month: 'T + 12', homeValue: 134580.20, percentChange: 2 }
+        { month: 'T + 12', homeValue: 134580.20, percentChange: 2 },
     ];
+    fetch(`./search/${state}/${county}/${year}/${month}`)
+        .then(response => response.json())
+        .then(data => {
+            housingCosts = data;
+            for (let i = 0; i < 25; i++) {
+                let i_month = housingCosts[i].month;
+                let i_year = housingCosts[i].year;
+                let i_hcosts = housingCosts[i].housing_cost;
 
-    
+                if (i != 0) {
+                    let originalPrice = housingCosts[i - 1].housing_cost;
+                    let newPrice = housingCosts[i].housing_cost;
+                    console.log(`${newPrice} > ${originalPrice}`);
+                    let percentChange = ((newPrice - originalPrice) / (originalPrice)) * 100;
+
+                    tableData[i].percentChange = percentChange;
+                }
+                 tableData[i].homeValue = i_hcosts;
+            }
+            isDone = true;
+        });
+
 
     // Function to determine cell color based on percent change
     function getCellColor(percentChange) {
@@ -59,25 +85,25 @@
     }
 
      // Function to recalculate cell colors when the threshold changes
-     function recalculateCellColors() {
-        tableData.forEach(row => {
-            row.color = getCellColor(row.percentChange);
-        });
-    }
+    //  function recalculateCellColors() {
+    // //     tableData.forEach(row => {
+    // //         row.color = getCellColor(row.percentChange);
+    // //     });
+    // // }
 
  
-        // Reactively recalculate cell colors when the threshold changes
-        $: {
-        recalculateCellColors();
-    }
+    //     // Reactively recalculate cell colors when the threshold changes
+    //     $: {
+    //     recalculateCellColors();
+    // }
     
     // Function to handle applying the threshold change
-    function applyThresholdChange() {
-        recalculateCellColors();
-    }
+    // function applyThresholdChange() {
+    //     recalculateCellColors();
+    // }
 </script>
 
-{#if isVisible}
+{#if isVisible && isDone}
     <div class="popup">
         
         <button class="close-button" on:click={()=>isVisible=false}>Close</button>
